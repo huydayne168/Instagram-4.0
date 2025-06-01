@@ -4,7 +4,7 @@ import Button from "../../components/UI/Button/Button";
 import { signUp, validateSignUpData } from "../../services/signupService";
 import SignUpFormDesc from "./SignUpFormDesc";
 import { AxiosError } from "axios";
-import { loginWithFacebook } from "../../services/loginService";
+import loginService from "../../services/loginService";
 import { useNavigate } from "react-router-dom";
 // import useRedirect from "../../hooks/useRedirect";
 
@@ -81,7 +81,7 @@ const SignUpForm = () => {
     return (
         <form action="#" className="flex flex-col items-center gap-2">
             <Button
-                onClick={loginWithFacebook}
+                onClick={loginService.loginWithFacebook}
                 content="Log in with Facebook"
                 className={buttonClassName}
             />

@@ -2,14 +2,16 @@ import Avatar from "../../../components/UI/Avatar/Avatar";
 import useRedirect from "../../../hooks/useRedirect";
 
 const UserTagBar: React.FC<{
+    _id?: string;
     username?: string;
     avatar?: string | null;
     annotate?: string;
     className?: string;
     avatarClassName?: string;
     annotateClassName?: string;
-    ActionButton?: React.FC;
+    ActionButton?: React.FC<{ userId?: string }>;
 }> = ({
+    _id,
     username,
     avatar,
     annotate,
@@ -32,7 +34,7 @@ const UserTagBar: React.FC<{
                 <div
                     className="text-white font-semibold cursor-pointer text-sm"
                     onClick={() => {
-                        gotoProfilePage(username);
+                        gotoProfilePage(_id);
                     }}
                 >
                     {username}
@@ -41,7 +43,7 @@ const UserTagBar: React.FC<{
                     {annotate}
                 </div>
             </div>
-            {ActionButton && <ActionButton />}
+            {ActionButton && <ActionButton userId={_id} />}
         </div>
     );
 };

@@ -5,7 +5,8 @@ const Button: React.FC<{
     className?: string;
     onClick?: Function;
     disable?: boolean;
-}> = ({ content, onClick, disable, className }) => {
+    icon?: React.ReactNode;
+}> = ({ content, onClick, disable, className, icon }) => {
     return (
         <button
             onClick={(e) => {
@@ -16,6 +17,7 @@ const Button: React.FC<{
             className={`${className} ${disable && "opacity-70"}`}
         >
             {content}
+            {icon && <span className="ml-2">{icon}</span>}
         </button>
     );
 };

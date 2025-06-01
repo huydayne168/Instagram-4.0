@@ -25,7 +25,7 @@ const getFollowingPosts = (userIdList) => {
 
 // Get User Posts
 const getUserPosts = (userId) => {
-    return Post.find({ userId });
+    return Post.find({ userId }).populate("photoVideo");
 };
 
 // Find a Post:

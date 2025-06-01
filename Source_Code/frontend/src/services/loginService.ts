@@ -1,14 +1,19 @@
 import { z } from "zod";
 import http from "../lib/axios/http";
 import { AxiosError } from "axios";
+import { FacebookUserResponse } from "../models/FacebookResponse";
 
 // Log in with Facebook: (======== This feature will be done later ========);
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const loginWithFacebook = async (data: any) => {
     try {
         const response = await http.post("/auth/login-with-facebook", {
             accessToken: data.accessToken,
         });
-        console.log(response);
+        return {
+            success: true,
+            data: response.data,
+        };
     } catch (error) {
         console.log(error);
     }
@@ -58,4 +63,5 @@ const login = async (data: LoginData) => {
     }
 };
 
-export { loginWithFacebook, validateLoginData, login };
+const loginService = { loginWithFacebook, validateLoginData, login };
+export default loginService;

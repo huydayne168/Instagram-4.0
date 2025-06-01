@@ -3,8 +3,8 @@ import { z } from "zod";
 
 // Log out validation:
 const logoutSchema = z.object({
-    username: z.string().min(1, {
-        message: "Your username is required, the username is not here!",
+    _id: z.string().min(1, {
+        message: "Your _id is required, the _id is not here!",
     }),
 });
 

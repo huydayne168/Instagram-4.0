@@ -79,6 +79,7 @@ exports.logout = async (req, res, next) => {
 exports.refreshAccessToken = async (req, res, next) => {
     const cookies = req.cookies;
     const refreshToken = cookies.jwt;
+    console.log("refreshToken: ", refreshToken);
     try {
         const result = await authService.refreshAccessToken(refreshToken);
         res.json(result);

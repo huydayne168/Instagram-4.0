@@ -21,7 +21,7 @@ const NavigationList = () => {
     const dispatch = useAppDispatch();
     const moreModalRef = useRef<HTMLDivElement>(null);
 
-    const { gotoHomePage, gotoProfilePage } = useRedirect();
+    const { gotoHomePage, gotoProfilePage, gotoMessagePage } = useRedirect();
 
     // Functions to handle navigation items that redirect to another pages clicked:
     const clickRedirect = useCallback((page: string) => {
@@ -32,7 +32,10 @@ const NavigationList = () => {
                 gotoHomePage();
                 break;
             case "profile":
-                gotoProfilePage(userInfo?.username);
+                gotoProfilePage(userInfo?._id);
+                break;
+            case "message":
+                gotoMessagePage();
                 break;
             default:
                 break;

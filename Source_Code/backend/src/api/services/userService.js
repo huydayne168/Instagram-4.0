@@ -43,11 +43,10 @@ exports.getSuggestedUsers = (currentUserId) => {
 };
 
 // Get User Profile:
-exports.getUserProfile = (username) => {
+exports.getUserProfile = (_id) => {
     return new Promise(async (resolve, reject) => {
         try {
-            const user = await userQuery.findAnUser({ username });
-            console.log(user);
+            const user = await userQuery.findAnUser({ _id });
             const userPosts = await postQuery.getUserPosts(user._id);
             resolve({
                 status: StatusCodes.OK,
@@ -61,6 +60,46 @@ exports.getUserProfile = (username) => {
             reject({
                 status: StatusCodes.INTERNAL_SERVER_ERROR,
                 message: "Error to get user profile!",
+            });
+        }
+    });
+};
+
+// Create Follow:
+exports.createFollow = (userId, followingId) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const result = await userQuery.createFollow(userId, followingId);
+            resolve({
+                status: StatusCodes.OK,
+                message: "Followed successfully!",
+                result,
+            });
+        } catch (error) {
+            console.log(error);
+            reject({
+                status: StatusCodes.INTERNAL_SERVER_ERROR,
+                message: "Error to follow user!",
+            });
+        }
+    });
+};
+
+// Delete Follow:
+exports.deleteFollow = (userId, followingId) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const result = await userQuery.deleteFollow(userId, followingId);
+            resolve({
+                status: StatusCodes.OK,
+                message: "Unfollowed successfully!",
+                result,
+            });
+        } catch (error) {
+            console.log(error);
+            reject({
+                status: StatusCodes.INTERNAL_SERVER_ERROR,
+                message: "Error to unfollow user!",
             });
         }
     });

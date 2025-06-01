@@ -9,6 +9,7 @@ type SideBarState = {
         | "create"
         | "profile";
     openedModal: "search" | "notifications" | null;
+    isSmall?: boolean;
     creatingPost: boolean;
     moreModal: boolean;
 };
@@ -25,6 +26,9 @@ const sideBarSlice = createSlice({
     initialState: initialState,
     reducers: {
         selectCurrentPage: (state, action) => {
+            if (action.payload === "message") {
+                state.isSmall = true;
+            } else state.isSmall = false;
             state.currentPage = action.payload;
             state.openedModal = null;
         },

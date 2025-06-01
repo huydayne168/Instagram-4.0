@@ -8,6 +8,7 @@ const NavigationItem: React.FC<{
 }> = ({ icon, title, onClick }) => {
     const sideBarSlice = useAppSelector((state) => state.sideBarSlice);
     const openedModal = sideBarSlice.openedModal;
+    const isSmall = sideBarSlice.isSmall;
     const currentPage = sideBarSlice.currentPage;
     return (
         <div
@@ -26,7 +27,9 @@ const NavigationItem: React.FC<{
 
             <p
                 className={`${
-                    openedModal ? "scale-0 delay-200" : "scale-100 delay-500"
+                    openedModal || isSmall
+                        ? "scale-0 delay-200"
+                        : "scale-100 delay-500"
                 } text-base font-normal transition-all  ease-in`}
             >
                 {title}

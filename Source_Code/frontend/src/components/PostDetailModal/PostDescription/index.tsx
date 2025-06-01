@@ -55,6 +55,7 @@ const PostDescription: React.FC<{ postData: Post }> = ({ postData }) => {
                 {/* Post Header */}
                 <div className="py-[14px] pl-4 pr-1 border-l border-lightDark border-b rounded-sm">
                     <UserTagBar
+                        _id={postData.userId._id}
                         username={postData.userId.username}
                         avatar={postData.userId.avatar}
                         avatarClassName="w-[32px] h[32px]"

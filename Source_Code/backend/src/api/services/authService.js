@@ -146,6 +146,7 @@ exports.loginWithFacebook = (res, accessToken) => {
                     accessToken,
                 });
             } else {
+                console.log(user);
                 // User already exists:
                 const accessToken = generateAccessToken(user);
                 const refreshToken = generateRefreshToken(user);
@@ -167,12 +168,12 @@ exports.loginWithFacebook = (res, accessToken) => {
 };
 
 // Logout service:
-exports.logout = (res, username) => {
+exports.logout = (res, _id) => {
     return new Promise(async (resolve, reject) => {
         try {
-            const user = await userQuery.findAnUser({ username });
-            // user.refreshToken = null;
-            // await user.save();
+            const user = await userQuery.findAnUser({ _id });
+            user.refreshToken = null;
+            await user.save();
             storeRefreshTokenToCookie(res, "", {
                 httpOnly: true,
                 secure: true,

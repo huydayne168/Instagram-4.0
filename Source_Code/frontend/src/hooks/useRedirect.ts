@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import { User } from "../models/User";
 
 const useRedirect = () => {
     const navigate = useNavigate();
@@ -15,11 +16,23 @@ const useRedirect = () => {
         navigate("/");
     };
 
-    const gotoProfilePage = (username?: string) => {
-        navigate(`/profile/${username}`, { state: { username } });
+    const gotoProfilePage = (_id?: string) => {
+        navigate(`/profile/${_id}`, { state: { _id } });
     };
 
-    return { gotoLoginPage, gotoSignUpPage, gotoHomePage, gotoProfilePage };
+    const gotoMessagePage = (_id?: string, user?: User) => {
+        if (_id) {
+            navigate(`/message/${_id}`, { state: { user } });
+        } else navigate("/message");
+    };
+
+    return {
+        gotoLoginPage,
+        gotoSignUpPage,
+        gotoHomePage,
+        gotoProfilePage,
+        gotoMessagePage,
+    };
 };
 
 export default useRedirect;

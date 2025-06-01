@@ -13,9 +13,10 @@ const cookieParser = require("cookie-parser");
 const bodyParser = require("body-parser");
 const { bodyParserUrlencodedConfigs } = require("./configs/bodyParser");
 const router = require("./api/routes/index");
+const setupSocket = require("./api/socketIo/socket");
 
 app.use(credentials);
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(cookieParser());
 app.use(bodyParser.json({ limit: "35mb" }));
 app.use(bodyParser.urlencoded(bodyParserUrlencodedConfigs));
@@ -37,13 +38,8 @@ mongoose
         const server = app.listen(PORT, () => {
             console.log(">>>>>>>>>I AM RUNNING IN PORT:" + PORT + "<<<<<<<<<");
         });
-        // const io = require("./socketio").init(server);
-        // io.on("connection", (socket) => {
-        //     console.log("Client connected!");
-        //     socket.on("sendMess", (data) => {
-        //         socket.broadcast.emit("receiveMess", data);
-        //     });
-        // });
+
+        setupSocket(server);
     })
     .catch((err) => {
         console.log(err);

@@ -1,8 +1,9 @@
 const postQuery = require("../mongooseQuery/postQuery");
+const userQuery = require("../mongooseQuery/userQuery");
 const photoVideoQuery = require("../mongooseQuery/photoVideoQuery");
-const followingQuery = require("../mongooseQuery/followingQuery");
 const photoVideoHelper = require("../helpers/photoVideoHelper");
 const { StatusCodes } = require("http-status-codes");
+const { User } = require("../models");
 
 // Create Post:
 exports.createPost = async (videoPhotoList, caption, user_id) => {
@@ -78,10 +79,8 @@ exports.getAllPosts = async () => {
 exports.getFollowingPosts = (userId) => {
     return new Promise(async (resolve, reject) => {
         try {
-            const followings = await followingQuery.findFollowings(userId);
-            const followingsIdList = followings.map((item) => {
-                return item.followingId;
-            });
+            const user = await userQuery.findAnUser({ _id: userId });
+            const followingsIdList = user.followings;
             const result = await postQuery.getFollowingPosts(followingsIdList);
 
             resolve({

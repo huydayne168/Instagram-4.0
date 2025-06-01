@@ -35,6 +35,32 @@ const getSuggestedUsers = (currentUserId) => {
     return User.find({ _id: { $ne: currentUserId } }).limit(10);
 };
 
+// Follow:
+const createFollow = (userId, followingId) => {
+    const user = User.updateOne(
+        { _id: followingId },
+        { $addToSet: { followers: userId } }
+    );
+    const followedUser = User.updateOne(
+        { _id: userId },
+        { $addToSet: { followings: followingId } }
+    );
+    return Promise.all([user, followedUser]);
+};
+
+// Delete Follow:
+const deleteFollow = (userId, followingId) => {
+    const user = User.updateOne(
+        { _id: followingId },
+        { $pull: { followers: userId } }
+    );
+    const followedUser = User.updateOne(
+        { _id: userId },
+        { $pull: { followings: followingId } }
+    );
+    return Promise.all([user, followedUser]);
+};
+
 // exports:
 module.exports = {
     createUser,
@@ -42,4 +68,6 @@ module.exports = {
     updateAnUser,
     getAllUsers,
     getSuggestedUsers,
+    createFollow,
+    deleteFollow,
 };

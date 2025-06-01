@@ -39,3 +39,5 @@ exports.getFollowingPosts = async (req, res, next) => {
         next(error);
     }
 };
+
+// Delete a Post:

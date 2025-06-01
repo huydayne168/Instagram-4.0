@@ -5,6 +5,7 @@ const jwt = require("jsonwebtoken");
 exports.verifyJWT = (req, res, next) => {
     if (req.headers.authorization) {
         const accessToken = req.headers.authorization.split(" ")[1];
+        console.log("accessToken: ", accessToken);
         jwt.verify(accessToken, env.ACCESS_TOKEN_CODE, (error, decoded) => {
             if (error) {
                 console.log(error);

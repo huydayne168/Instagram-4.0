@@ -6,6 +6,7 @@ import useRedirect from "../../hooks/useRedirect";
 const SideBarLogo = () => {
     const sideBarSlice = useAppSelector((state) => state.sideBarSlice);
     const openedModal = sideBarSlice.openedModal;
+    const isSmall = sideBarSlice.isSmall;
     const { gotoHomePage } = useRedirect();
     return (
         <div
@@ -14,14 +15,14 @@ const SideBarLogo = () => {
         >
             <div
                 className={`${
-                    openedModal ? "scale-100" : "scale-0"
+                    openedModal || isSmall ? "scale-100" : "scale-0"
                 } absolute transition-all ease-in delay-200`}
             >
                 <LogoImg />
             </div>
             <div
                 className={`${
-                    openedModal ? "opacity-0" : "opacity-100"
+                    openedModal || isSmall ? "opacity-0" : "opacity-100"
                 } transition-all ease-in delay-200`}
             >
                 <LogoText size="small" />

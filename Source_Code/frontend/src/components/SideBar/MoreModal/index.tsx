@@ -1,4 +1,3 @@
-import React, { useEffect, useRef } from "react";
 import MoreItem from "./MoreItem";
 import { useAppDispatch, useAppSelector } from "../../../hooks/useStore";
 import { logout, validateLogoutData } from "../../../services/logoutService";
@@ -14,17 +13,17 @@ const MoreModal = () => {
 
     // Logout handler:
     const logoutHandler = async () => {
-        const username = authSlice.userInfo?.username;
-        if (username) {
+        const _id = authSlice.userInfo?._id;
+        if (_id) {
             try {
                 const validationResult = validateLogoutData({
-                    username,
+                    _id,
                 });
                 if (!validationResult.success) {
                     console.log(validationResult.error);
                 } else {
                     const res = await logout(privateHttp, {
-                        username,
+                        _id,
                     });
                     console.log(res);
                     dispatch(authActions.loggedOut(null));

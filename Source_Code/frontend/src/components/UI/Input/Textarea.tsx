@@ -5,6 +5,7 @@ const Textarea: React.FC<{
     id: string;
     placeholder?: string;
     getTextareaValueHandler: Function;
+    handleEnterKey?: Function;
     addedEmojis?: string[];
     className: string;
     clear?: boolean;
@@ -14,6 +15,7 @@ const Textarea: React.FC<{
     placeholder,
     addedEmojis,
     getTextareaValueHandler,
+    handleEnterKey,
     className,
     clear,
 }) => {
@@ -69,6 +71,12 @@ const Textarea: React.FC<{
                 className +
                 "max-h-28 scrollbar-hide resize-none overscroll-contain"
             }
+            onKeyDown={(e) => {
+                if (e.key === "Enter" && !e.shiftKey) {
+                    e.preventDefault();
+                    handleEnterKey && handleEnterKey(value);
+                }
+            }}
             // onInput={() => {
             //     const textarea = textareaRef.current;
             //     if (textarea) {

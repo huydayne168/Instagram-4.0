@@ -24,7 +24,7 @@ exports.generateAccessToken = (userInfo) => {
         },
         env.ACCESS_TOKEN_CODE,
         {
-            expiresIn: "60m",
+            expiresIn: "30d", // 1 month
         }
     );
     return accessToken;
@@ -36,7 +36,7 @@ exports.generateRefreshToken = (userInfo) => {
         {
             userInfo: {
                 username: userInfo.username,
-                id: userInfo.id,
+                id: userInfo.id || userInfo.facebookId,
             },
         },
         env.REFRESH_TOKEN_CODE,

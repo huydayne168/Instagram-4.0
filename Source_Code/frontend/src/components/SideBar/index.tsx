@@ -9,6 +9,7 @@ const SideBar = () => {
     const openedModal = useAppSelector(
         (state) => state.sideBarSlice
     ).openedModal;
+    const isSmall = useAppSelector((state) => state.sideBarSlice).isSmall;
     const creatingPost = useAppSelector(
         (state) => state.sideBarSlice
     ).creatingPost;
@@ -17,7 +18,7 @@ const SideBar = () => {
         <>
             <div
                 className={`h-full ${
-                    openedModal ? "w-72px" : "w-60"
+                    openedModal || isSmall ? "w-72px" : "w-60"
                 } flex flex-col px-3 pt-2 pb-5 border-r-0.5 border-lightDark transition-all delay-300 ease-in`}
             >
                 <SideBarLogo />
