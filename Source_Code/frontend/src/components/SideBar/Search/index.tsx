@@ -1,8 +1,9 @@
-import React, { useCallback, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Input from "../../UI/Input/Input";
 import SearchedResult from "./SearchedResult";
-import RecentSearch from "./RecentSearch";
 import { useAppSelector } from "../../../hooks/useStore";
+import { getAllUsers } from "../../../services/userService";
+import { User } from "../../../models/User";
 
 const SearchModal = () => {
     const openedModal = useAppSelector(
@@ -10,10 +11,43 @@ const SearchModal = () => {
     ).openedModal;
 
     const [search, setSearch] = useState<string>("");
+    const [results, setResults] = useState<User[]>([]);
+    const [allUsers, setAllUsers] = useState<User[]>([]);
 
-    const getSearchInputValue = useCallback((value: string) => {
-        setSearch(value);
+    useEffect(() => {
+        const getSuggestedUsers = async () => {
+            try {
+                // Fetch suggested users
+                const result = await getAllUsers();
+                setResults(result?.data.users);
+                setAllUsers(result?.data.users);
+            } catch (error) {
+                console.log(error);
+            }
+        };
+        getSuggestedUsers();
     }, []);
+
+    // Update results based on search input
+    useEffect(() => {
+        if (search.trim() === "") {
+            setResults(allUsers);
+        } else {
+            const filteredResults = results.filter(
+                (user) =>
+                    (user.username &&
+                        user.username
+                            .toLowerCase()
+                            .includes(search.toLowerCase())) ||
+                    user.fullName.toLowerCase().includes(search.toLowerCase())
+            );
+            setResults(filteredResults);
+        }
+    }, [search]);
+
+    const getSearchInputValue = (value: string) => {
+        setSearch(value);
+    };
 
     return (
         <div
@@ -33,7 +67,7 @@ const SearchModal = () => {
                 placeholder="Search"
                 getInputValueHandler={getSearchInputValue}
             />
-            {search ? <SearchedResult results={[]} /> : <RecentSearch />}
+            <SearchedResult results={results} />
         </div>
     );
 };
