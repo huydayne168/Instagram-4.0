@@ -9,8 +9,9 @@ const Post: React.FC<{ postData: PostModel }> = ({ postData }) => {
         <div className="pb-5 mb-5 w-[468.4px] border-b border-lightDark border-solid">
             {/* Post Header */}
             <PostHeader
+                userId={postData.userId._id}
                 avatar={postData.userId.avatar}
-                username={postData.userId.username}
+                username={postData.userId.username || postData.userId.fullName}
                 time={postData.createdAt}
             />
             {/* Post Content */}

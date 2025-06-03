@@ -18,6 +18,7 @@ type LikeData = z.infer<typeof likeDataSchema>;
 export const likePost = async (privateHttp: AxiosInstance, data: LikeData) => {
     try {
         const res = await privateHttp.post("/like/create-like-post", data);
+
         return res;
     } catch (error) {
         if (axios.isAxiosError(error)) {

@@ -35,17 +35,8 @@ const ProfilePost: React.FC<{ post: Post }> = ({ post }) => {
                 </div>
             )}
 
-            {/* Video indicator */}
-            {/* {post. && (
-                <div className="absolute top-2 right-2 z-10">
-                    <div className="w-5 h-5 bg-black bg-opacity-60 rounded-full flex items-center justify-center">
-                        <div className="w-0 h-0 border-l-[6px] border-l-white border-t-[3px] border-t-transparent border-b-[3px] border-b-transparent ml-0.5"></div>
-                    </div>
-                </div>
-            )} */}
-
             {/* Hover overlay with stats */}
-            <div className="absolute inset-0 bg-dark bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center z-20">
+            <div className="absolute inset-0 bg-dark bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center z-2">
                 <div className="flex items-center gap-6 text-white">
                     {post.likes !== undefined && (
                         <div className="flex items-center gap-2">

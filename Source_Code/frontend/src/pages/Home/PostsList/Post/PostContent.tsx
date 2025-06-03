@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { PhotoVideo } from "../../../../models/PhotoVideo";
 import VideoPhotoSwiper from "../../../../components/UI/VideoPhotoSwiper";
 import LikeIcon from "../../../../components/UI/Icons/LikeIcon";
 import CommentIcon from "../../../../components/UI/Icons/CommentIcon";
@@ -8,7 +7,6 @@ import SaveIcon from "../../../../components/UI/Icons/SaveIcon";
 import split1000 from "../../../../utils/split1000";
 import { useAppDispatch, useAppSelector } from "../../../../hooks/useStore";
 import LikedIcon from "../../../../components/UI/Icons/LikedIcon";
-import { Like } from "../../../../models/Like";
 import { motion } from "framer-motion";
 import {
     likePost,
@@ -20,6 +18,7 @@ import useRedirect from "../../../../hooks/useRedirect";
 import { postDetailModalActions } from "../../../../lib/redux/postDetailModalSlice";
 import { Post } from "../../../../models/Post";
 import { useLocation } from "react-router-dom";
+import { socket } from "../../../../socket/socket";
 
 const PostContent: React.FC<{
     postData: Post;
@@ -42,7 +41,7 @@ const PostContent: React.FC<{
                 setLiked(true);
             }
         }
-    }, []);
+    }, [currentUser, postData.likes]);
 
     const openPostDetailModal = () => {
         dispatch(
@@ -63,6 +62,12 @@ const PostContent: React.FC<{
                 setLikesCount((prev) => prev + 1);
                 const result = await likePost(privateHttp, {
                     postId: postData._id,
+                });
+                socket.emit("sendNotification", {
+                    senderId: currentUser?._id,
+                    receiverId: postData.userId,
+                    type: "LIKE",
+                    content: `${currentUser?.username} liked your post`,
                 });
                 console.log(result?.data);
             }

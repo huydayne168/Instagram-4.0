@@ -4,8 +4,14 @@ import { useAppSelector } from "../../hooks/useStore";
 import SearchModal from "./Search";
 import NotificationsModal from "./Notifications";
 import CreatePost from "./CreatePost";
+import { useEffect, useState } from "react";
+import { socket } from "../../socket/socket";
+import { Notification } from "../../models/Notification";
+import usePrivateHttp from "../../hooks/usePrivateHttp";
 
 const SideBar = () => {
+    const [notifications, setNotifications] = useState<Notification[]>([]);
+    const privateHttp = usePrivateHttp();
     const openedModal = useAppSelector(
         (state) => state.sideBarSlice
     ).openedModal;
@@ -13,6 +19,31 @@ const SideBar = () => {
     const creatingPost = useAppSelector(
         (state) => state.sideBarSlice
     ).creatingPost;
+
+    useEffect(() => {
+        const fetchNotifications = async () => {
+            try {
+                const response = await privateHttp.get("/notification/get-all");
+                const data = response.data;
+                setNotifications(data.notifications);
+            } catch (error) {
+                console.error("Error fetching notifications:", error);
+            }
+        };
+
+        fetchNotifications();
+    }, [privateHttp]);
+
+    useEffect(() => {
+        socket.on("receiveNotification", (notification: Notification) => {
+            console.log("Received Notification:", notification);
+            setNotifications((prev: Notification[]) => [notification, ...prev]);
+        });
+
+        return () => {
+            socket.off("receiveMessage");
+        };
+    }, []);
 
     return (
         <>
@@ -25,7 +56,7 @@ const SideBar = () => {
                 <NavigationList />
             </div>
             <SearchModal />
-            <NotificationsModal />
+            <NotificationsModal notifications={notifications} />
             {creatingPost ? <CreatePost /> : null}
         </>
     );

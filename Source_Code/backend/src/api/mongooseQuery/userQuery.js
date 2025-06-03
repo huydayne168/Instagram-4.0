@@ -30,9 +30,16 @@ const getAllUsers = () => {
     return User.find();
 };
 
-// Get Suggested Users ===> This feature will be develope later!!!, Now just let it simple!
-const getSuggestedUsers = (currentUserId) => {
-    return User.find({ _id: { $ne: currentUserId } }).limit(10);
+// Get Suggested Users
+const getSuggestedUsers = async (currentUserId) => {
+    const currentUser = await User.findById(currentUserId).select("followings");
+    const followingIds = currentUser.followings || [];
+    return User.find({
+        _id: { $nin: [...followingIds, currentUserId] },
+    })
+        .populate("followers")
+        .populate("followings")
+        .limit(10);
 };
 
 // Follow:

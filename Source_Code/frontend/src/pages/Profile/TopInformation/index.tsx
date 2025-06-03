@@ -4,17 +4,49 @@ import { Profile } from "../../../models/Profile";
 import Avatar from "../../../components/UI/Avatar/Avatar";
 import Button from "../../../components/UI/Button/Button";
 import { useAppSelector } from "../../../hooks/useStore";
+import { createFollow, deleteFollow } from "../../../services/userService";
+import usePrivateHttp from "../../../hooks/usePrivateHttp";
+import { socket } from "../../../socket/socket";
 
 const TopInformation: React.FC<{ profile: Profile }> = ({ profile }) => {
+    const privateHttp = usePrivateHttp();
     const currentUserId = useAppSelector(
         (state) => state.authSlice.userInfo?._id
     );
     const [isOwnProfile, setIsOwnProfile] = React.useState<boolean>(
         profile._id === currentUserId
     );
+    console.log("TopInformation", profile);
     const [isFollowing, setIsFollowing] = React.useState<boolean>(
-        (currentUserId && profile.followers?.includes(currentUserId)) || false
+        !!(
+            currentUserId &&
+            profile.followers?.some((follower) => {
+                return follower._id === currentUserId;
+            })
+        )
     );
+
+    const handleFollowUser = async () => {
+        try {
+            if (!isFollowing && profile._id) {
+                const response = await createFollow(privateHttp, profile._id);
+                setIsFollowing(true);
+                socket.emit("sendNotification", {
+                    senderId: currentUserId,
+                    receiverId: profile._id,
+                    type: "FOLLOW",
+                    content: `${profile.fullName} started following you`,
+                });
+                console.log(response);
+            } else if (profile._id) {
+                const response = await deleteFollow(privateHttp, profile._id);
+                setIsFollowing(false);
+                console.log(response);
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    };
     return (
         <div className="grid grid-cols-3 text-white px-4 py-6">
             {/* <LeftAvatar avatarUrl={profile.avatar} />
@@ -57,6 +89,7 @@ const TopInformation: React.FC<{ profile: Profile }> = ({ profile }) => {
 
                             {isFollowing && (
                                 <Button
+                                    onClick={handleFollowUser}
                                     content="Unfollow"
                                     className="px-4 py-1.5 text-sm bg-red-500 hover:bg-red-600 rounded"
                                 />

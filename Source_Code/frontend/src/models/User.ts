@@ -6,7 +6,7 @@ export type User = {
     bio: string | null;
     fullName: string;
     avatar: string | null;
-    followers?: string[];
+    followers?: User[];
     followings?: string[];
     refreshToken?: string;
     createdAt?: Date;

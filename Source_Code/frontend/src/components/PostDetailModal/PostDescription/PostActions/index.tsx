@@ -7,7 +7,7 @@ const PostActions: React.FC<{ postData: Post }> = ({ postData }) => {
     return (
         <div className="flex flex-col">
             <PostReact postData={postData} />
-            <PostComment postId={postData._id} />
+            <PostComment postId={postData._id} postData={postData} />
         </div>
     );
 };

@@ -5,6 +5,7 @@ const userRoute = require("./userRoute");
 const likeRoute = require("./likeRoute");
 const commentRoute = require("./commentRoute");
 const messageRoute = require("./messageRoute");
+const notificationRoute = require("./notificationRoute");
 
 const router = Router();
 
@@ -25,5 +26,8 @@ router.use("/comment", commentRoute);
 
 // message router:
 router.use("/message", messageRoute);
+
+// notification router:
+router.use("/notification", notificationRoute);
 
 module.exports = router;

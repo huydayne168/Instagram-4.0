@@ -4,10 +4,11 @@ import calculateTimeAgo from "../../../../utils/calculateTimeAgo";
 import useRedirect from "../../../../hooks/useRedirect";
 
 const PostHeader: React.FC<{
+    userId: string;
     avatar: string | undefined | null;
     username: string;
     time: Date | undefined;
-}> = ({ avatar, username, time }) => {
+}> = ({ userId, avatar, username, time }) => {
     // calculate time:
     const timeAgo = calculateTimeAgo(time);
 
@@ -21,7 +22,7 @@ const PostHeader: React.FC<{
                 <span
                     className="font-semibold cursor-pointer"
                     onClick={() => {
-                        gotoProfilePage(username);
+                        gotoProfilePage(userId);
                     }}
                 >
                     {username}

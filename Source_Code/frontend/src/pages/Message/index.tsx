@@ -9,7 +9,6 @@ const Message = () => {
     useEffect(() => {
         const getUsers = async () => {
             try {
-                // Fetch suggested users
                 const result = await getAllUsers();
                 setUsers(result?.data.users);
             } catch (error) {

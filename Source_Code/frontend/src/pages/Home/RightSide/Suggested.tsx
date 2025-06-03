@@ -4,8 +4,11 @@ import { getSuggestedUsers as getSuggestedUsersList } from "../../../services/us
 import UserTagBar from "../../../components/UI/UserTagBar";
 import usePrivateHttp from "../../../hooks/usePrivateHttp";
 import { createFollow, deleteFollow } from "../../../services/userService";
+import { socket } from "../../../socket/socket";
+import { useAppSelector } from "../../../hooks/useStore";
 
 const SuggestedUsersAction: React.FC<{ userId?: string }> = ({ userId }) => {
+    const currentUser = useAppSelector((state) => state.authSlice.userInfo);
     const [isFollowing, setIsFollowing] = useState(false);
 
     const privateHttp = usePrivateHttp();
@@ -15,6 +18,12 @@ const SuggestedUsersAction: React.FC<{ userId?: string }> = ({ userId }) => {
             if (!isFollowing && userId) {
                 const response = await createFollow(privateHttp, userId);
                 setIsFollowing(true);
+                socket.emit("sendNotification", {
+                    senderId: currentUser?._id,
+                    receiverId: userId,
+                    type: "FOLLOW",
+                    content: `${currentUser?.fullName} started following you`,
+                });
                 console.log(response);
             } else if (userId) {
                 const response = await deleteFollow(privateHttp, userId);

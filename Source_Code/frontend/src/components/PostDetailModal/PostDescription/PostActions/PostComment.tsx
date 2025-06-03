@@ -9,8 +9,14 @@ import {
 } from "../../../../services/commentService";
 import usePrivateHttp from "../../../../hooks/usePrivateHttp";
 import { CommentListContext } from "..";
+import { socket } from "../../../../socket/socket";
+import { Post } from "../../../../models/Post";
+import { useAppSelector } from "../../../../hooks/useStore";
 
-const PostComment: React.FC<{ postId: string }> = ({ postId }) => {
+const PostComment: React.FC<{ postId: string; postData: Post }> = ({
+    postId,
+    postData,
+}) => {
     const [comment, setComment] = useState<string>("");
     const [isEmojiVisible, setIsEmojiVisible] = useState(false);
     const [emojis, setEmojis] = useState<string[]>([]);
@@ -19,6 +25,8 @@ const PostComment: React.FC<{ postId: string }> = ({ postId }) => {
     const addEmoji = useCallback((e: any) => {
         setEmojis((pre) => [...pre, e.native]);
     }, []);
+
+    const currentUser = useAppSelector((state) => state.authSlice.userInfo);
 
     const [clear, setClear] = useState<boolean>(false);
 
@@ -36,6 +44,14 @@ const PostComment: React.FC<{ postId: string }> = ({ postId }) => {
                 console.log(validateResult.error, "error");
             } else {
                 const result = await postComment(privateHttp, postCommentData);
+                socket.emit("sendNotification", {
+                    senderId: currentUser?._id,
+                    receiverId: postData.userId._id,
+                    type: "COMMENT",
+                    content: `${
+                        result.comment.userName || currentUser?.fullName
+                    } commented on your post`,
+                });
                 commentsListContext.commentListDispatch({
                     type: "ADD_COMMENT",
                     payload: result.comment,
