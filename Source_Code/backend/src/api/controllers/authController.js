@@ -64,10 +64,10 @@ exports.loginWithFacebook = async (req, res, next) => {
 
 // Log out:
 exports.logout = async (req, res, next) => {
-    const { username } = req.body;
+    const { _id } = req.body;
     req.currentUser = null;
     try {
-        const result = await authService.logout(res, username);
+        const result = await authService.logout(res, _id);
         res.json(result);
     } catch (error) {
         console.log(error);

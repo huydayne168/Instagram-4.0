@@ -4,6 +4,7 @@ import useRedirect from "../../../hooks/useRedirect";
 const UserTagBar: React.FC<{
     _id?: string;
     username?: string;
+    fullName?: string;
     avatar?: string | null;
     annotate?: string;
     className?: string;
@@ -13,6 +14,7 @@ const UserTagBar: React.FC<{
 }> = ({
     _id,
     username,
+    fullName,
     avatar,
     annotate,
     className,
@@ -37,7 +39,7 @@ const UserTagBar: React.FC<{
                         gotoProfilePage(_id);
                     }}
                 >
-                    {username}
+                    {username || fullName}
                 </div>
                 <div className={`text-textSecondGray ${annotateClassName}`}>
                     {annotate}

@@ -6,7 +6,10 @@ import SignUpFormDesc from "./SignUpFormDesc";
 import { AxiosError } from "axios";
 import loginService from "../../services/loginService";
 import { useNavigate } from "react-router-dom";
-// import useRedirect from "../../hooks/useRedirect";
+import { useAppDispatch } from "../../hooks/useStore";
+import { authActions } from "../../lib/redux/authSlice";
+import useRedirect from "../../hooks/useRedirect";
+import ReactFacebookLogin from "react-facebook-login";
 
 const inputClassName =
     "w-64 p-2 border border-textGray rounded-sm focus:outline-none text-sm placeholder:text-sm";
@@ -14,9 +17,9 @@ const buttonClassName =
     "w-64 py-2 px-3 rounded-lg font-semibold bg-blue text-white";
 
 const SignUpForm = () => {
-    // const { gotoLoginPage } = useRedirect();
+    const { gotoHomePage } = useRedirect();
     const navigate = useNavigate();
-
+    const dispatch = useAppDispatch();
     // Sign up form data:
     const [email, setEmail] = useState<string>("");
     const [fullName, setFullName] = useState<string>("");
@@ -78,12 +81,38 @@ const SignUpForm = () => {
         navigate("/login");
     }, [email, fullName, username, password]);
 
+    const handleLoginWithFacebook = async (response: any) => {
+        if (!response.accessToken) {
+            setErrorMess("Login with Facebook failed. Please try again later.");
+        } else {
+            const result = await loginService.loginWithFacebook(response);
+
+            if (result?.success) {
+                dispatch(
+                    authActions.loggedIn({
+                        userInfo: result.data.userInfo,
+                        accessToken: result.data.accessToken,
+                    })
+                );
+                gotoHomePage();
+            } else {
+                setErrorMess(
+                    "Login with Facebook failed. Please try again later."
+                );
+            }
+        }
+    };
+
     return (
         <form action="#" className="flex flex-col items-center gap-2">
-            <Button
-                onClick={loginService.loginWithFacebook}
-                content="Log in with Facebook"
-                className={buttonClassName}
+            <ReactFacebookLogin
+                appId={import.meta.env.REACT_APP_FACEBOOK_APP_ID || ""}
+                autoLoad={true}
+                fields="name,email,picture"
+                callback={(response) => {
+                    handleLoginWithFacebook(response);
+                }}
+                cssClass={buttonClassName}
             />
             <div
                 className="w-64 my-2 flex items-center 

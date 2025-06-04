@@ -16,6 +16,9 @@ const TopInformation: React.FC<{ profile: Profile }> = ({ profile }) => {
     const [isOwnProfile, setIsOwnProfile] = React.useState<boolean>(
         profile._id === currentUserId
     );
+    const [followers, setFollowers] = React.useState<number>(
+        profile.followers ? profile.followers.length : 0
+    );
     console.log("TopInformation", profile);
     const [isFollowing, setIsFollowing] = React.useState<boolean>(
         !!(
@@ -31,6 +34,7 @@ const TopInformation: React.FC<{ profile: Profile }> = ({ profile }) => {
             if (!isFollowing && profile._id) {
                 const response = await createFollow(privateHttp, profile._id);
                 setIsFollowing(true);
+                setFollowers((prev) => prev + 1);
                 socket.emit("sendNotification", {
                     senderId: currentUserId,
                     receiverId: profile._id,
@@ -41,6 +45,7 @@ const TopInformation: React.FC<{ profile: Profile }> = ({ profile }) => {
             } else if (profile._id) {
                 const response = await deleteFollow(privateHttp, profile._id);
                 setIsFollowing(false);
+                setFollowers((prev) => prev - 1);
                 console.log(response);
             }
         } catch (error) {
@@ -83,6 +88,7 @@ const TopInformation: React.FC<{ profile: Profile }> = ({ profile }) => {
                     ) : (
                         <>
                             <Button
+                                onClick={handleFollowUser}
                                 content={isFollowing ? "Following" : "Follow"}
                                 className="flex items-center gap-1 px-4 py-1.5 text-sm bg-textGray hover:bg-gray-600 rounded"
                             />
@@ -110,9 +116,7 @@ const TopInformation: React.FC<{ profile: Profile }> = ({ profile }) => {
                         <div className="text-sm">posts</div>
                     </div>
                     <div className="text-center">
-                        <div className="text-xl font-semibold">
-                            {profile.followers?.length}
-                        </div>
+                        <div className="text-xl font-semibold">{followers}</div>
                         <div className="text-sm">followers</div>
                     </div>
                     <div className="text-center">

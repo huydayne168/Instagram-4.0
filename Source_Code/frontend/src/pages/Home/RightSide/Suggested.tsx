@@ -86,6 +86,7 @@ const Suggested = () => {
                                 key={`suggested-${user._id}`}
                                 _id={user._id}
                                 username={user.username}
+                                fullName={user.fullName}
                                 avatar={user.avatar}
                                 annotate="Suggested for you"
                                 ActionButton={SuggestedUsersAction}
